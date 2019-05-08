@@ -15,7 +15,7 @@
                                        data-block="{{ $block->name }}"
                                        data-name="title"
                                        data-type="file"
-                                       value="{{$block[$field_name]->title}}"
+                                       value="{{ $block->$field_name->title }}"
                                        data-id="{{ $block->getType()->fieldExist('id') ? $block->id : '0' }}"
                                        placeholder="Имя файла при скачивании">
                                 <div class="clearfix"></div>

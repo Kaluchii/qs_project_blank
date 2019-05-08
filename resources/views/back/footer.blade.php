@@ -11,6 +11,6 @@
     <div class="pull-right">
         <button type="submit" class="btn btn-primary global-save">Сохранить</button>
     </div>
-    <strong>Разработано в <a href="http://go-big.kz" target="_blank">BIG</a></strong>
+    <strong>Разработано в <a href="https://gobig.kz" target="_blank">BIG</a></strong>
 </footer>
 @endsection

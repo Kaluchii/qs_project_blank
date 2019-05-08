@@ -1,9 +1,15 @@
 <div class="form-group">
     <label>{{ !empty($title) ? $title : 'Целое число' }}</label>
-    <input class="form-control int {{ $class }}"
+    <input class="form-control int {{ !empty($class) ? $class : '' }}"
            type="number"
-           step="{{ !empty($step) ? $step : '0.1' }}"
-           value="{{ $block[$field_name] }}"
+           step="{{ !empty($step) ? $step : '1' }}"
+           @if(!empty($max))
+           max="{{ $max }}"
+           @endif
+           @if(!empty($min))
+           min="{{ $min }}"
+           @endif
+           value="{{ $block->$field_name }}"
            data-name="{{ $field_name }}"
            data-type="int"
            data-block="{{ $block->name }}"
