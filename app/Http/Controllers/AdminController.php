@@ -31,8 +31,8 @@ class AdminController extends Controller
 //
 //
 //    public function getServices(){
+//        $this->extract->tuneSelection('services_list')->sortBy('sorter','DESC');
 //        $block = $this->extract->getBlock('services');
-//        $this->extract->tuneSelection('services')->sortBy('sorter','DESC');
 //
 //        return view('back.blocks.services', [
 //            'block' => $block
@@ -41,10 +41,10 @@ class AdminController extends Controller
 //
 //
 //    public function getServicesItem( $id ){
-//        $item = $this->extract->getGroupItem('services_list', $id);
+//        $block = $this->extract->getGroupItem('services_list', $id);
 //
 //        return view('back.groups.services_list.services_list', [
-//            'item' => $item
+//            'block' => $block
 //        ]);
 //    }
 

@@ -10,16 +10,16 @@ use Interpro\Feedback\Contracts\FeedbackAgent;
 class MailController extends Controller
 {
     private $feedback;
-    public function __construct( FeedbackAgent $feedback){
+    public function __construct( FeedbackAgent $feedback ){
 
         $this->feedback = $feedback;
         // Объявляем все шаблоны писем для форм
 
-        $this->feedback->setBodyTemplate('example_form', 'back/mail/example_form_mail');
+        $this->feedback->setBodyTemplate('example_form', 'mails/example_form_mail');
 
     }
 
-    public function send(Request $request){
+    public function send( Request $request ){
         try{
             $data = $request->all();
 
@@ -28,7 +28,7 @@ class MailController extends Controller
             $this->feedback->mail($form, $data);
             return ['error' => false];
         }catch(\Exception $error){
-            return ['error' => true, 'error'=> $error->getMessage()];
+            return ['error' => true, 'error' => $error->getMessage()];
         }
     }
 
