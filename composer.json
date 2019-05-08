@@ -13,18 +13,18 @@
         "laravel/framework": "5.8.*",
         "laravel/tinker": "^1.0",
 
-        "interpro/core": "1.1.*",
+        "interpro/core": "1.2.*",
         "interpro/service": "^1.1",
 
         "interpro/imageaggr": "1.1.*",
-        "interpro/qsaggr": "1.1.*",
-        "interpro/fileaggr": "1.0.*",
+        "interpro/qsaggr": "1.2.*",
+        "interpro/fileaggr": "1.1.*",
 
         "interpro/entrance": "1.1.*",
         "interpro/extractor": "1.0.*",
-        "interpro/feedback": "1.0.*",
-        "interpro/scalar": "1.0.*",
-        "interpro/seo": "1.0.*"
+        "interpro/feedback": "1.1.*",
+        "interpro/scalar": "1.1.*",
+        "interpro/seo": "1.1.*"
     },
     "require-dev": {
         "beyondcode/laravel-dump-server": "^1.0",
@@ -72,12 +72,10 @@
             "@php artisan key:generate --ansi"
         ],
         "post-install-cmd": [
-            "Illuminate\\Foundation\\ComposerScripts::postInstall",
-            "php artisan optimize"
+            "Illuminate\\Foundation\\ComposerScripts::postInstall"
         ],
         "post-update-cmd": [
-            "Illuminate\\Foundation\\ComposerScripts::postUpdate",
-            "php artisan optimize"
+            "Illuminate\\Foundation\\ComposerScripts::postUpdate"
         ]
     }
 }
