@@ -48,4 +48,22 @@ class AdminController extends Controller
 //        ]);
 //    }
 
+
+    public function getMeta(){
+        $block = $this->extract->getBlock('index_page');
+
+        return view('back.blocks.meta', [
+            'block' => $block
+        ]);
+    }
+
+
+    public function getPost(){
+        $block = $this->extract->getBlock('feedback');
+
+        return view('back.blocks.mails', [
+            'block' => $block
+        ]);
+    }
+
 }

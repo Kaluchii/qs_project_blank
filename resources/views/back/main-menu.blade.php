@@ -4,12 +4,17 @@
             <li class="header">Главная страница</li>
             <li>
                 <a href="/adm/all">
-                    <i class="fa fa-globe"></i> <span>Общие настройки</span>
+                    <i class="fa fa-circle-o"></i> <span>Общие настройки</span>
                 </a>
             </li>
             <li>
-                <a href="/adm/seo">
-                    <i class="fa fa-chrome"></i> <span>СЕО</span>
+                <a href="/adm/meta">
+                    <i class="fa fa-circle-o"></i> <span>Метаданные</span>
+                </a>
+            </li>
+            <li>
+                <a href="/adm/post">
+                    <i class="fa fa-circle-o"></i> <span>Настройки почты</span>
                 </a>
             </li>
 

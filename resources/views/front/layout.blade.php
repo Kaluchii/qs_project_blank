@@ -58,17 +58,15 @@
 {{--    {!! $scripts->after_open_field !!}--}}
 
     @include('front.header')
-    @yield('header')
 
     @yield('content')
 
     @include('front.footer')
-    @yield('footer')
 
-    <div class="hide">
+    <div class="hidden">
         @include('front.popups.example_form')
         @include('front.popups.thank')
-        <a href="#thanks" class="thank"></a>
+        <a href="#thanks" class="js_thank"></a>
     </div>
 
     @include('front.scripts')
