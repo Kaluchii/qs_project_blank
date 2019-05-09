@@ -2,7 +2,7 @@
 @section('content')
     @include('back.content-top', ['title' => 'Категория примеров'])
 
-    <div class="box box box-info">
+    <div class="box box-info">
         <div class="box-header with-border">
             <h3 class="box-title">Поля для редактирования данных</h3>
         </div>
