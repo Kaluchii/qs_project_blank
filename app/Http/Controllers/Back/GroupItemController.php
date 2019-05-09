@@ -38,7 +38,7 @@ class GroupItemController extends Controller
 
 
             $view = view('back.groups.'.$data['blockname'].'.'.$data['blockname'].'_row' , [
-                'item' => $new_item
+                'block' => $new_item
             ])->render();
 
             return ['error' => false, 'message' => '', 'view' => $view];
@@ -55,7 +55,7 @@ class GroupItemController extends Controller
 
 
             $view = view('back.groups.'.$data['blockname'].'.'.$data['blockname'].'_box' , [
-                'item' => $new_item
+                'block' => $new_item
             ])->render();
 
             return ['error' => false, 'message' => '', 'view' => $view];

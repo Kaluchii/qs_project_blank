@@ -1,3 +1,12 @@
+@php
+    $value = $block->$field_name;
+    if (!empty($min)) {
+        $value = $value < $min ? $min : $value;
+    }
+    if (!empty($max)) {
+        $value = $value > $max ? $max : $value;
+    }
+@endphp
 <div class="form-group">
     <label>{{ !empty($title) ? $title : 'Целое число' }}</label>
     <input class="form-control int {{ !empty($class) ? $class : '' }}"
@@ -9,7 +18,7 @@
            @if(!empty($min))
            min="{{ $min }}"
            @endif
-           value="{{ $block->$field_name }}"
+           value="{{ $value }}"
            data-name="{{ $field_name }}"
            data-type="int"
            data-block="{{ $block->name }}"
