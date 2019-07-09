@@ -1,0 +1,13 @@
+.title(){
+
+}
+
+.link(@color, @hover, @border_h){
+  color: @color;
+
+  &:hover, &:focus{
+    cursor: pointer;
+    background: linear-gradient(to right, @border_h, @border_h 100%) repeat-x ~'0 100% / 10px 1px';
+    color: @hover;
+  }
+}

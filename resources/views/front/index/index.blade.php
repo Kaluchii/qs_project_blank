@@ -1,96 +1,30 @@
 @extends('front.layout')
 @section('content')
-    {{--@include('front.meta', [--}}
-        {{--'title' => $index->seo_title,--}}
-        {{--'description' => $index->seo_description,--}}
-        {{--'keywords' => $index->seo_keywords,--}}
-        {{--'spare' => $index->page_title--}}
-    {{--])--}}
+    @include('front.meta', [
+        'title' => $index_page->seo_title,
+        'description' => $index_page->seo_description,
+        'keywords' => $index_page->seo_keywords,
+        'spare' => 'Качественные окна по лучшей цене'
+    ])
 
 
-    <div class="flex-center position-ref full-height">
-        <style>
-            html, body {
-                background-color: #fff;
-                color: #636b6f;
-                font-family: 'Nunito', sans-serif;
-                font-weight: 200;
-                height: 100vh;
-                margin: 0;
-            }
+    <main class="page__content content">
+        @include('front.index.blocks.title')
+        @include('front.index.blocks.windows')
+        @include('front.index.blocks.help')
+        @include('front.index.blocks.quality')
+        @include('front.index.blocks.best_price')
+        @include('front.index.blocks.reviews')
+        @include('front.index.blocks.contacts')
+    </main>
 
-            .full-height {
-                height: 100vh;
-            }
-
-            .flex-center {
-                align-items: center;
-                display: flex;
-                justify-content: center;
-            }
-
-            .position-ref {
-                position: relative;
-            }
-
-            .top-right {
-                position: absolute;
-                right: 10px;
-                top: 18px;
-            }
-
-            .content {
-                text-align: center;
-            }
-
-            .title {
-                font-size: 84px;
-            }
-
-            .links > a {
-                color: #636b6f;
-                padding: 0 25px;
-                font-size: 13px;
-                font-weight: 600;
-                letter-spacing: .1rem;
-                text-decoration: none;
-                text-transform: uppercase;
-            }
-
-            .m-b-md {
-                margin-bottom: 30px;
-            }
-        </style>
-        @if (Route::has('login'))
-            <div class="top-right links">
-                @auth
-                    <a href="{{ url('/home') }}">Home</a>
-                @else
-                    <a href="{{ route('login') }}">Login</a>
-
-                    @if (Route::has('register'))
-                        <a href="{{ route('register') }}">Register</a>
-                    @endif
-                @endauth
-            </div>
-        @endif
-
-        <div class="content">
-            <div class="title m-b-md">
-                Laravel
-            </div>
-
-            <div class="links">
-                <a href="https://laravel.com/docs">Docs</a>
-                <a href="https://laracasts.com">Laracasts</a>
-                <a href="https://laravel-news.com">News</a>
-                <a href="https://blog.laravel.com">Blog</a>
-                <a href="https://nova.laravel.com">Nova</a>
-                <a href="https://forge.laravel.com">Forge</a>
-                <a href="https://github.com/laravel/laravel">GitHub</a>
+    <div class="thanks-screen js_thanks_screen">
+        <div class="thanks-screen__container">
+            <div class="thanks-screen__text-wrapper">
+                <p class="thanks-screen__title">Спасибо!</p>
+                <p class="thanks-screen__text">Мы свяжемся с вами в ближайшее время по указанному номеру телефона.</p>
             </div>
         </div>
     </div>
-
 
 @endsection
