@@ -1,228 +1,71 @@
-//============================================================================================
-// -- Переменные для настройки
-//============================================================================================
-const gulp              = require('gulp');
-const concat            = require('gulp-concat');
-const autoprefixer      = require('gulp-autoprefixer');
-const cleanCSS          = require('gulp-clean-css');
-const uglify            = require('gulp-uglify');
-const browserSync       = require('browser-sync').create();
-const plumber           = require('gulp-plumber');
-const less              = require('gulp-less');
-const rename            = require('gulp-rename');
-const sourcemaps        = require('gulp-sourcemaps');
-const imagemin          = require('gulp-imagemin');
-const changeCase        = require('change-case');
-const changed           = require('gulp-changed');
-// НА РАСМОТРЕНИИ
-const csscomb           = require('gulp-csscomb');
+'use strict';
+// (1) Глобальная область видимости
+global.$ = {
+    // (2) Плагины
+    gulp:                      require('gulp'),
+    qp:                        require('gulp-load-plugins')(),
+    browserSync:               require('browser-sync').create(),
+    sourcemaps:                require('gulp-sourcemaps'),
+    sass:                      require('gulp-sass'),
+    autoprefixer:              require('gulp-autoprefixer'),
+    csso:                      require('gulp-csso'),
+    concat:                    require('gulp-concat'),
+    babel:                     require('gulp-babel'),
+    imagemin:                  require('gulp-imagemin'),
+    imageminJpegRecompress:    require('imagemin-jpeg-recompress'),
+    pngquant:                  require('imagemin-pngquant'),
+    rename:                    require('gulp-rename'),
+    webp:                      require('gulp-webp'),
+    changed:                   require('gulp-changed'),
+    plumber:                   require('gulp-plumber'),
+    svgmin:                    require('gulp-svgmin'),
+    cheerio:                   require('gulp-cheerio'),
+    replace:                   require('gulp-replace'),
+    svgSprite:                 require('gulp-svg-sprite'),
+    ttf2woff:                  require('gulp-ttf2woff'),
+    ttf2woff2:                 require('gulp-ttf2woff2'),
+    clean:                     require('gulp-clean'),
+    prettify:                  require('gulp-html-prettify'),
+    njkRender:                 require('gulp-nunjucks-render'),
+    // (3) Путь до файла с выбранными тасками
+    tasks:                     require('./gulp/main.js'),
+    // (4) Точки входа и выхода
+    dist:                      './public',
+    src:                       './resources',
+    assets:                    '/assets',
+    // (5) Доп. переменные
+    imgExt:                    '{svg,Svg,SVG,png,Png,PNG,jpg,Jpg,JPG,jpeg,Jpeg,JPEG,gif,Gif,GIF,bmp,BMP,Bmp}'
+};
 
+// (6) Подключение всех выбранных тасков
+$.tasks.forEach(function (taskPath) {
+    require(taskPath)();
+});
 
-//============================================================================================
-// -- РАЗРЕШЕНИЯ ИЗОБРОЖЕНИЙ
-//============================================================================================
-const image_ext = '{svg,Svg,SVG,png,Png,PNG,jpg,Jpg,JPG,jpeg,Jpeg,JPEG,gif,Gif,GIF,bmp,BMP,Bmp}';
+// (7) Таск для запуска системы
+$.gulp.task('default', $.gulp.series(
+    // (8) Удаление всех собираемых папок
+    $.gulp.parallel('clean'),
+    // (9) Выполнение всех тасков
+    $.gulp.parallel('scss', 'scripts', 'scripts:vendor', 'images', 'images:dev', 'sprite:css', 'sprite:html',
+                    'fonts:woff', 'fonts:woff2', 'static', 'nunjucks'),
+    // (10) Запуск ватчеров и сервера
+    $.gulp.parallel('watch', 'serve')
+));
 
-//============================================================================================
-// -- ПУТИ ДО ФАЙЛОВ
-//============================================================================================
-const components     = './resources/assets/components/',
-	scripts          = './resources/assets/js/',
-	base             = './resources/assets/base/',
-	images           = './resources/assets/img/',
-	pluginsOverlay   = './resources/assets/base/plugins_overlay/',
-	vendor           = './resources/assets/vendor/',
-	commonCss        = './resources/assets/base/common/',
-	commonBlocks     = './resources/assets/base/common/blocks/',
-
-	productionCss    = './public/css/',
-	productionImg    = './public/img/',
-	productionJs     = './public/js/',
-	html             = './resources/views/front/',
-
-	devImg           = [
-		images + '**/*.' + image_ext,
-        components + '**/*.' + image_ext
-	],
-	styleComponents  = [
-		commonCss        + '*.less',
-		base           	 + '*.less',
-		vendor           + '**/*.css',
-        vendor           + '**/*.less',
-		pluginsOverlay   + '**/*.less',
-        commonBlocks     + '**/*.less',
-		components       + '**/*.less',
-		'!' + components + '**/*.adaptive.less',
-		'!' + commonBlocks + '**/*.adaptive.less',
-		'!' + base + '**/*.adaptive.less',
-		'!/**/d_*/*.*',
-		'!/**/d_*.*'
-	],
-	adaptiveStyleComponents = [
-		commonCss  + '*.less',
-		commonBlocks  + '**/*.adaptive.less',
-		components + '**/*.adaptive.less',
-		base + '**/*.adaptive.less',
-		'!/**/d_*/*.*',
-		'!/**/d_*.*'
-	],
-	scriptComponents = [
-		vendor     + '**/*.js',
-        pluginsOverlay   + '**/*.js',
-		scripts    + '**/*.js',
-		components + '**/*.js',
-		'!/**/d_*/*.*',
-		'!/**/d_*.*'
-	],
-	imageDirs = [];
-
-//============================================================================================
-// -- Ватчеры файлов
-//============================================================================================
-function watch(){
-	browserSync.init({
-		browser: ["google-chrome"/*, "firefox"*/],
-		proxy: 'http://127.0.0.1:8000',
-		notify: false,
-		reloadDelay: 100,
-		serveStatic: [productionCss]
-	});
-
-	gulp.watch(styleComponents, styles);
-	gulp.watch(adaptiveStyleComponents, stylesAdaptive);
-	gulp.watch(scriptComponents, js);
-	gulp.watch(devImg, image);
-	gulp.watch(html).on('change', browserSync.reload);
-}
-
-gulp.task('watch', watch);
-
-//============================================================================================
-// -- Компиляция и обработка LESS
-//============================================================================================
-function styles() {
-	return gulp.src(styleComponents)
-		.pipe(plumber())
-		.pipe(sourcemaps.init())
-		.pipe(concat('style.less'))
-		.pipe(less())
-		.pipe(autoprefixer({
-            overrideBrowserslist: ['> 1%', 'last 2 versions', 'Firefox ESR'],
-			cascade: false
-		}))
-		.pipe(rename('style.css'))
-		.pipe(sourcemaps.write())
-		.pipe(gulp.dest(productionCss))
-		.pipe(browserSync.stream());
-}
-
-function stylesAdaptive() {
-	return gulp.src(adaptiveStyleComponents)
-		.pipe(plumber())
-		.pipe(sourcemaps.init())
-		.pipe(concat('adaptive.less'))
-		.pipe(less())
-		.pipe(autoprefixer({
-            overrideBrowserslist: ['> 1%', 'last 2 versions', 'Firefox ESR'],
-			cascade: false
-		}))
-		.pipe(rename('adaptive.css'))
-		.pipe(sourcemaps.write())
-		.pipe(gulp.dest(productionCss))
-		.pipe(browserSync.stream());
-}
-
-gulp.task('stylesAll', gulp.parallel(styles, stylesAdaptive));
-
-//============================================================================================
-// -- JS and PHP
-//============================================================================================
-function js() {
-	return gulp.src(scriptComponents)
-		.pipe(sourcemaps.init())
-		.pipe(concat('scripts.js'))
-		.pipe(sourcemaps.write())
-		.pipe(gulp.dest(productionJs))
-		.pipe(browserSync.stream());
-}
-
-gulp.task('js', js);
-
-//============================================================================================
-// -- Оптимизация изображений
-//============================================================================================
-function image() {
-	return gulp.src(devImg)
-		.pipe(changed(productionImg))
-		.pipe(plumber())
-		.pipe(imagemin([
-			imagemin.gifsicle({interlaced: true}),
-			imagemin.jpegtran({progressive: true}),
-			imagemin.optipng({optimizationLevel: 7}),
-			imagemin.svgo({
-				plugins: [
-					{removeViewBox: true},
-					{cleanupIDs: false}
-				]
-			})
-		]))
-		.pipe(rename(function (path) {
-			path.basename = changeCase.lowerCase(path.basename);
-			path.extname = changeCase.lowerCase(path.extname);
-		}))
-		.pipe(gulp.dest(productionImg))
-		.pipe(browserSync.reload({
-			stream: true
-		}));
-}
-
-gulp.task('imageAll', gulp.parallel(image));
-
-//============================================================================================
-// -- PRODUCTION
-//============================================================================================
-function ProductionStyles(){
-	return gulp.src(styleComponents)
-		.pipe(plumber())
-		.pipe(concat('style.less'))
-		.pipe(less())
-		.pipe(autoprefixer({
-            overrideBrowserslist: ['> 1%', 'last 3 versions', 'Firefox ESR'],
-			cascade: false
-		}))
-		.pipe(cleanCSS({
-			level: 2
-		}))
-		.pipe(rename('style.css'))
-		.pipe(gulp.dest(productionCss))
-}
-
-function ProductionStylesAdaptive() {
-	return gulp.src(adaptiveStyleComponents)
-		.pipe(plumber())
-		.pipe(concat('adaptive.less'))
-		.pipe(less())
-		.pipe(autoprefixer({
-            overrideBrowserslist: ['> 1%', 'last 3 versions', 'Firefox ESR'],
-			cascade: false
-		}))
-		.pipe(rename('adaptive.css'))
-		.pipe(cleanCSS({
-			level: 2
-		}))
-		.pipe(gulp.dest(productionCss))
-}
-
-function ProductionScript(){
-	return gulp.src(scriptComponents)
-		.pipe(concat('scripts.js'))
-		.pipe(uglify({
-			toplevel: true
-		}))
-		.pipe(gulp.dest(productionJs))
-}
-
-gulp.task('production', gulp.parallel(ProductionStylesAdaptive, ProductionStyles, ProductionScript));
-
-//============================================================================================
-
+// ================================================================================================================== //
+// (1)  - Объект видимый во всех тасках.
+// (2)  - Плагины используемые в тасках.
+// (3)  - Файл ./gulp/main.js где подключаются такски используемые в проекте.
+// (4)  - Точки входа и выхода. Если сруктура прокта отличается, то измените пути.
+// (5)  - Доп. переменные. Если нужно опрокинуть переменные глобально.
+// (6)  - Цикл подключающий все таски выбранные в (3).
+// (7)  - Вызов таска командой "gulp" в терминале.
+// (8)  - Удаление папок указанных в таске clean. Удаление производится для того, что бы если вдруг в папке dist
+// были удаленны собранные файлы (таск можно опустить).
+// (9)  - Выполнение всех тасков. После (8) собирает заного все папки с их содержимым. (должны быть выбраны все таски
+// что и в (3)).
+// (10) - Запуск ватчеров и сервера.
+// ================================================================================================================== //
+// TODO: Реализовать 1. lowerCase для названия изображений
+// TODO: Реализовать 2. Таск PRODUCTION

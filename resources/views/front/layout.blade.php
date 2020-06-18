@@ -16,8 +16,8 @@
 {{--        <link rel="icon" type="image/png" href="/img/fav.png">--}}
     @include('front.manifest')
     @yield('meta')
-    @include('front.styles')
-    @include('front.scripts')
+    @include('front.meta.styles')
+    @include('front.meta.scripts')
     {{--    {!! $scripts->before_head_close !!}--}}
 </head>
 <body class="page">

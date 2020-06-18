@@ -16,6 +16,7 @@ html{
   //line-height: @lh-big; /* 1 */
   -webkit-text-size-adjust: 100%; /* 2 */
   box-sizing: border-box;
+  overflow-x: hidden;
 }
 
 /* Sections
